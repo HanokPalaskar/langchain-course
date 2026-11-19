@@ -10,6 +10,9 @@ from tavily import TavilyClient
 #another way to implement - use inbuilt tavily search tool from langchain_tavily
 from langchain_tavily import TavilySearch
 
+from typing import List
+from pydantic import BaseModel, Field
+
 tavily = TavilyClient()
 
 @tool
