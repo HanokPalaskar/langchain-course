@@ -27,6 +27,18 @@ def search(query: str) -> str:
     print(f"Searching for {query}")
     return tavily.search(query=query)
 
+class Source(BaseModel):
+    """Schema for a source used by the agent"""
+
+    url:str = Field(description="The URL of the source")
+
+class AgentResponse(BaseModel):
+    """Schema for agent response with answer and sources"""
+
+    answer:str = Field(description="The agent's answer to the query")
+    sources: List[Source] = Field(default_factory=list, description="List of sources used to generate the answers")
+
+
 llm = ChatOpenAI(
     model = os.getenv("AZURE_OPENAI_DEPLOYMENT"),
     base_url = os.getenv("AZURE_OPENAI_ENDPOINT"),
@@ -38,7 +50,7 @@ tools = [search]
 
 # Using the inbuilt TavilySearch tool from langchain_tavily
 #tools = [TavilySearch()]
-agent = create_agent(model=llm, tools=tools)
+agent = create_agent(model=llm, tools=tools, response_format=AgentResponse)
 
 def main():
     print("\n This is search agent demo")
